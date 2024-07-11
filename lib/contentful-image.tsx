@@ -15,5 +15,5 @@ const contentfulLoader = ({ src, width, quality }: ContentfulImageProps) => {
 };
 
 export default function ContentfulImage(props: ContentfulImageProps) {
-  return <Image alt={props.alt} loader={contentfulLoader} {...props} style={{width: `${props.width}px`, height: `${props.height}px`}} />;
+  return <Image alt={props.alt} loader={contentfulLoader} {...props} />;
 }
