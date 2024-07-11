@@ -1,60 +1,112 @@
+'use client'
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Avatar from "./avatar";
-import DateComponent from "./date";
+import chevronLeft from '../public/assets/chevronLeft.svg';
+import chevronRight from '../public/assets/chevronRight.svg';
 import CoverImage from "./cover-image";
 
 function PostPreview({
   title,
   coverImage,
-  date,
   excerpt,
   author,
   slug,
-}: {
+}: Readonly<{
   title: string;
   coverImage: any;
-  date: string;
   excerpt: string;
   author: any;
   slug: string;
-}) {
+}>) {
+
   return (
-    <div>
-      <div className="mb-5">
-        <CoverImage title={title} slug={slug} url={coverImage.url} />
+    <div className="related-article-card border border-xl p-4 rounded-md shadow w-[350px] flex-shrink-0">
+      <div className="mb-2">
+        <CoverImage title={title} slug={slug} url={coverImage.url} className="rounded-md" />
       </div>
       <h3 className="text-3xl mb-3 leading-snug">
         <Link href={`/posts/${slug}`} className="hover:underline">
           {title}
         </Link>
       </h3>
-      <div className="text-lg mb-4">
-        <DateComponent dateString={date} />
-      </div>
-      <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
+      <p className="text-base leading-relaxed mb-4">{excerpt}</p>
       {author && <Avatar name={author.name} picture={author.picture} />}
     </div>
   );
 }
 
-export default function MoreStories({ morePosts }: { morePosts: any[] }) {
+export default function MoreStories({ morePosts }: Readonly<{ morePosts: any[] }>) {
+  const [carousel, setCarousel] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() =>{
+    const carousel = document.querySelector('.carousel-box');
+    setCarousel(carousel as HTMLDivElement);
+
+  },[]);
+
+
+  const handleLeftClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    if (carousel) {
+      carousel.scrollLeft -= 380;
+    }
+  };
+
+  const handleRightClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    if (carousel) {
+      carousel.scrollLeft += 380;
+    }
+  };
+
   return (
-    <section>
+    <section className="">
       <h2 className="mb-8 text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
-        More Stories
+        Related Articles
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 lg:gap-x-32 gap-y-20 md:gap-y-32 mb-32">
-        {morePosts.map((post) => (
-          <PostPreview
-            key={post.slug}
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            author={post.author}
-            slug={post.slug}
-            excerpt={post.excerpt}
-          />
-        ))}
+      <div className="carousel-container flex">
+        <Image
+          className={'leftArrow cursor-pointer'}
+          unoptimized={true}
+          onClick={handleLeftClick}
+          src={chevronLeft}
+          loader={chevronLeft}
+          priority
+          alt="nextjs"
+          height={50}
+          width={50} />
+        <div className="carousel-box flex overflow-scroll gap-x-8 md:gap-x-8 py-8 mb-32 scroll-smooth">
+          {morePosts.map((post) => (
+            <PostPreview
+              key={post.slug}
+              title={post.blogTitle}
+              coverImage={post.banner}
+              author={post.authorCollection[0]}
+              slug={post.slug}
+              excerpt={post.excerpt}
+            />
+          ))}
+          {morePosts.map((post) => (
+            <PostPreview
+              key={post.slug}
+              title={post.blogTitle}
+              coverImage={post.banner}
+              author={post.authorCollection[0]}
+              slug={post.slug}
+              excerpt={post.excerpt}
+            />
+          ))}
+        </div>
+        <Image
+          className={'rightArrow cursor-pointer'}
+          unoptimized={true}
+          onClick={handleRightClick}
+          src={chevronRight}
+          loader={chevronRight}
+          priority
+          alt="nextjs"
+          height={50}
+          width={50} />
       </div>
     </section>
   );

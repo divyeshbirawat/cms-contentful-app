@@ -9,6 +9,9 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.17.1",
     "@contentful/rich-text-types": "^16.2.1",
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@mui/material-nextjs": "^5.15.11",
     "@tailwindcss/typography": "0.5.9",
     "@types/node": "^20.5.0",
     "@types/react": "^18.2.20",

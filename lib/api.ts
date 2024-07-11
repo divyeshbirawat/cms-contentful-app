@@ -1,30 +1,26 @@
 const POST_GRAPHQL_FIELDS = `
   slug
-  title
-  coverImage {
+  banner {
+    title
     url
   }
-  date
-  author {
-    name
-    picture {
-      url
-    }
-  }
+  blogTitle
   excerpt
-  content {
+  blogContent {
     json
-    links {
-      assets {
-        block {
-          sys {
-            id
+  }
+  authorCollection(limit: 20) {
+      items {
+        ... on Author {
+          slug
+          authorName
+          authorImage {
+            title
+            url
           }
-          url
-          description
         }
       }
-    }
+
   }
 `;
 
@@ -48,17 +44,26 @@ async function fetchGraphQL(query: string, preview = false): Promise<any> {
 }
 
 function extractPost(fetchResponse: any): any {
-  return fetchResponse?.data?.postCollection?.items?.[0];
+  return fetchResponse?.data?.blogCollection?.items?.[0];
 }
 
+function extractAuthor(fetchResponse: any): any {
+  return fetchResponse?.data?.authorCollection?.items?.[0];
+}
+
+
 function extractPostEntries(fetchResponse: any): any[] {
-  return fetchResponse?.data?.postCollection?.items;
+  return fetchResponse?.data?.blogCollection?.items;
+}
+
+function extractMenuEntries(fetchResponse: any): any[] {
+  return fetchResponse?.data?.megaMenuCollection?.items;
 }
 
 export async function getPreviewPostBySlug(slug: string | null): Promise<any> {
   const entry = await fetchGraphQL(
     `query {
-      postCollection(where: { slug: "${slug}" }, preview: true, limit: 1) {
+      blogCollection(where: { slug: "${slug}" }, preview: true, limit: 1) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
@@ -70,9 +75,9 @@ export async function getPreviewPostBySlug(slug: string | null): Promise<any> {
 }
 
 export async function getAllPosts(isDraftMode: boolean): Promise<any[]> {
-  const entries = await fetchGraphQL(
+  let entries = await fetchGraphQL(
     `query {
-      postCollection(where: { slug_exists: true }, order: date_DESC, preview: ${
+      blogCollection(where: { slug_exists: true }, preview: ${
         isDraftMode ? "true" : "false"
       }) {
         items {
@@ -85,13 +90,68 @@ export async function getAllPosts(isDraftMode: boolean): Promise<any[]> {
   return extractPostEntries(entries);
 }
 
+export async function getAuthorBySlug(slug: string | null): Promise<any> {
+  const entry = await fetchGraphQL(
+    `query {
+      authorCollection(where: { slug: "${slug}" }, limit: 1) {
+        items {
+          authorName
+          authorImage {
+            title
+            url
+          }
+          authorDescription {
+            json
+          }
+        }
+      }
+    }`,
+    true,
+  );
+  return extractAuthor(entry);
+}
+
+
+export async function getAllMenuList(): Promise<any[]> {
+  let list = await fetchGraphQL(
+    `query {
+      megaMenuCollection(preview: false)
+      {
+        items {
+          megaMenuTitle
+          megaMenuItemCollection(limit: 20) {
+            items {
+              ... on Blog {
+                __typename
+                blogTitle
+                slug
+              }
+              ... on Author {
+                __typename
+                slug
+                authorName
+                authorImage {
+                  title
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }`,
+    false,
+  );
+  return extractMenuEntries(list);
+}
+
 export async function getPostAndMorePosts(
   slug: string,
   preview: boolean,
 ): Promise<any> {
   const entry = await fetchGraphQL(
     `query {
-      postCollection(where: { slug: "${slug}" }, preview: ${
+      blogCollection(where: { slug: "${slug}" }, preview: ${
         preview ? "true" : "false"
       }, limit: 1) {
         items {
@@ -101,17 +161,18 @@ export async function getPostAndMorePosts(
     }`,
     preview,
   );
-  const entries = await fetchGraphQL(
+  const isDraftMode = false;
+  let entries = await fetchGraphQL(
     `query {
-      postCollection(where: { slug_not_in: "${slug}" }, order: date_DESC, preview: ${
-        preview ? "true" : "false"
-      }, limit: 2) {
+      blogCollection(where: { slug_exists: true }, preview: ${
+        isDraftMode ? "true" : "false"
+      }) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
       }
     }`,
-    preview,
+    isDraftMode,
   );
   return {
     post: extractPost(entry),

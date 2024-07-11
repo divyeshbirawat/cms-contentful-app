@@ -4,8 +4,8 @@ export default function Avatar({
   name,
   picture,
 }: {
-  name: string;
-  picture: any;
+  readonly name: string;
+  readonly picture: any;
 }) {
   return (
     <div className="flex items-center">
@@ -15,7 +15,7 @@ export default function Avatar({
           className="object-cover h-full rounded-full"
           height={48}
           width={48}
-          src={picture.url}
+          src={picture}
         />
       </div>
       <div className="text-xl font-bold">{name}</div>
