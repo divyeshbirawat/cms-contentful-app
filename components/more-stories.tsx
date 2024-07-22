@@ -86,16 +86,6 @@ export default function MoreStories({ morePosts }: Readonly<{ morePosts: any[] }
               excerpt={post.excerpt}
             />
           ))}
-          {morePosts.map((post) => (
-            <PostPreview
-              key={post.slug}
-              title={post.blogTitle}
-              coverImage={post.banner}
-              author={post.authorCollection[0]}
-              slug={post.slug}
-              excerpt={post.excerpt}
-            />
-          ))}
         </div>
         <Image
           className={'rightArrow cursor-pointer'}

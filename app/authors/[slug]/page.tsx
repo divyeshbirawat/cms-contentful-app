@@ -1,3 +1,5 @@
+'use client'
+import dynamic from 'next/dynamic';
 import ContentfulImage from '@/lib/contentful-image';
 import { Markdown } from "@/lib/markdown";
 import { getAuthorBySlug } from '@/lib/api';

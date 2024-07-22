@@ -1,16 +1,16 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { EXAMPLE_PATH, CMS_NAME } from "@/lib/constants";
-import { draftMode } from 'next/headers';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { getAllMenuList } from "@/lib/api";
 
-import MegaMenu from "./megamenu";
+import MegaMenu from "../components/megamenu";
 
-export const metadata = {
-  title: `Next.js and ${CMS_NAME} Example`,
-  description: `This is a blog built with Next.js and ${CMS_NAME}.`,
-};
+
+// export const metadata = {
+//   title: `Next.js and ${CMS_NAME} Example`,
+//   description: `This is a blog built with Next.js and ${CMS_NAME}.`,
+// };
 
 const inter = Inter({
   variable: "--font-inter",
@@ -52,7 +52,6 @@ export default async function RootLayout({
   readonly children: React.ReactNode;
 }) {
 
-  // const { isEnabled } = draftMode();
   const megaMenuList = await getAllMenuList();
 
   return (

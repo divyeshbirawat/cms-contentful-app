@@ -1,13 +1,13 @@
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import { draftMode } from "next/headers";
 
-import MoreStories from "../../more-stories";
-import Avatar from "../../avatar";
-import Date from "../../date";
-import CoverImage from "../../cover-image";
+import MoreStories from "@/components/more-stories";
+import Avatar from "@/components/avatar";
+import CoverImage from "@/components/cover-image";
 
 import { Markdown } from "@/lib/markdown";
 import { getAllPosts, getPostAndMorePosts } from "@/lib/api";
+import Social from "@/components/social";
 
 export async function generateStaticParams() {
   const allPosts = await getAllPosts(false);
@@ -45,9 +45,9 @@ export default async function PostPage({
             (<Avatar key={eachItem.authorName} name={eachItem.authorName} picture={eachItem.authorImage?.url} />)
           )}
           </div>
-          {/* <div className="mb-6 text-lg">
-            <Date dateString={post.date} />
-          </div> */}
+          <div className="mb-6 text-lg">
+            <Social />
+          </div>
         </div>
 
         <div className="mx-auto max-w-2xl">

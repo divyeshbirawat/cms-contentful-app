@@ -179,3 +179,11 @@ export async function getPostAndMorePosts(
     morePosts: extractPostEntries(entries),
   };
 }
+
+///////////////////////////////////////////////
+// const contentful = require('contentful');
+
+// export const getContentfulData = contentful.createClient({
+//   space: process.env.CONTENTFUL_SPACE_ID,
+//   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+// });
