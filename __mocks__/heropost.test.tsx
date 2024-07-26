@@ -5,14 +5,14 @@ describe('HeroPost', () => {
   const mockPost = {
     title: 'Mr Somebody',
     coverImage: { url: 'https://images.ctfassets.net/gw7b0sf7m3xt/78RtpeqIWdQj3sONSwsarJ/920da85bf537b0667aa6d337f463b288/1cuZovm.jpeg' },
-    excerpt: 'Sample excerpt',
+    excerpt: 'test excerpt',
     author: [
       {
         authorName: 'Mr Nobody',
         authorImage: { url: 'https://images.ctfassets.net/gw7b0sf7m3xt/78RtpeqIWdQj3sONSwsarJ/920da85bf537b0667aa6d337f463b288/1cuZovm.jpeg' },
       },
     ],
-    slug: 'sample-slug',
+    slug: 'test-slug',
   };
 
   it('renders the post correctly', () => {
